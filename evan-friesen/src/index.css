@@ -1,0 +1,74 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--dark);
+  --color-foreground: var(--light);
+  --color-border: rgba(255, 255, 255, 0.12);
+  
+  --color-primary: var(--orange);
+  --color-primary-foreground: var(--dark);
+
+  --font-sans: 'DM Sans', sans-serif;
+  --font-display: 'Syne', sans-serif;
+
+  --color-orange: #ffc228;
+  --color-blue: #1eaeda;
+  --color-dark: #0a0a0f;
+  --color-light: #f9f8f5;
+}
+
+:root {
+  --orange: #ffc228;
+  --blue: #1eaeda;
+  --dark: #0a0a0f;
+  --light: #f9f8f5;
+  --background: 240 20% 5%;
+  --foreground: 40 20% 95%;
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased text-light bg-dark overflow-x-hidden min-h-[100dvh];
+  }
+}
+
+.sunset-bg {
+  position: absolute; inset: 0; z-index: 0;
+  min-height: 100%;
+  background: linear-gradient(180deg,
+    #0d1f2e 0%, #1eaeda 12%, #3ab8e0 22%, #7ecfed 34%,
+    #f5c97a 52%, #ffc228 68%, #e8891a 82%, #c45c10 94%, #8b2e00 100%
+  );
+}
+.sunset-sun {
+  position: fixed;
+  left: 50%;
+  top: 78%;
+  width: 720px;
+  height: 720px;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 236, 180, 0.85) 0%,
+    rgba(255, 194, 40, 0.55) 18%,
+    rgba(232, 137, 26, 0.28) 38%,
+    rgba(196, 92, 16, 0.12) 58%,
+    rgba(139, 46, 0, 0) 75%
+  );
+  filter: blur(8px);
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.sunset-overlay {
+  position: absolute; inset: 0; z-index: 2;
+  min-height: 100%;
+  background: rgba(0,0,0,0.28);
+  pointer-events: none;
+}

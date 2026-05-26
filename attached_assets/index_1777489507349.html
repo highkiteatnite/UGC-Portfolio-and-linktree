@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evan Friesen</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --orange: #ffc228; --blue: #1eaeda; --dark: #0a0a0f; --light: #f9f8f5; }
+
+  body { font-family: 'DM Sans', sans-serif; color: var(--light); min-height: 100vh; overflow-x: hidden; background: var(--dark); }
+
+  .sunset-bg {
+    position: fixed; inset: 0; z-index: 0;
+    background: linear-gradient(180deg,
+      #0d1f2e 0%, #1eaeda 12%, #3ab8e0 22%, #7ecfed 34%,
+      #f5c97a 52%, #ffc228 68%, #e8891a 82%, #c45c10 94%, #8b2e00 100%
+    );
+  }
+  .sunset-overlay { position: fixed; inset: 0; z-index: 1; background: rgba(0,0,0,0.38); pointer-events: none; }
+  nav, .site-content { position: relative; z-index: 10; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 60px;
+    background: transparent;
+    border: none;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;
+    letter-spacing: -0.02em; cursor: pointer;
+    color: var(--orange);
+    -webkit-text-fill-color: var(--orange);
+    flex-shrink: 0;
+  }
+  .nav-tabs { display: flex; align-items: center; gap: 0.25rem; }
+  .nav-tab {
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500;
+    letter-spacing: 0.06em; color: rgba(255,194,40,0.55);
+    background: none; border: none; cursor: pointer;
+    padding: 0.45rem 1rem; border-radius: 100px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-tab:hover { color: var(--orange); background: rgba(0,0,0,0.25); }
+  .nav-tab.active { color: var(--orange); background: rgba(0,0,0,0.3); }
+  .nav-cta {
+    font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--orange); border: 1px solid rgba(255,194,40,0.5);
+    background: rgba(0,0,0,0.6);
+    border-radius: 100px; padding: 0.42rem 1rem; cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    font-family: 'DM Sans', sans-serif; font-weight: 500;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .nav-cta:hover { background: rgba(0,0,0,0.8); border-color: var(--orange); }
+
+  /* ─── PAGES ─── */
+  #page-landing { display: none; }
+  #page-portfolio { display: none; }
+
+  /* ─── LANDING HOME ─── */
+  .wordmark {
+    font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 800; letter-spacing: -0.03em;
+    color: var(--orange);
+    -webkit-text-fill-color: var(--orange);
+    margin-bottom: 0.4rem;
+  }
+  .tagline { font-size: 0.9rem; font-weight: 300; color: rgba(249,248,245,0.65); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 4rem; }
+  .prompt-label { font-family: 'Syne', sans-serif; font-size: 1.05rem; color: rgba(249,248,245,0.8); margin-bottom: 2rem; }
+  .split-btns { display: flex; gap: 1.25rem; flex-wrap: wrap; justify-content: center; }
+  .split-btn {
+    position: relative; padding: 1.05rem 2.8rem;
+    border-radius: 100px;
+    font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+    letter-spacing: 0.04em; cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: rgba(0,0,0,0.7);
+  }
+  .btn-viewer { color: #fff; border: 1px solid rgba(255,255,255,0.35); }
+  .btn-viewer:hover { border-color: rgba(255,255,255,0.65); background: rgba(0,0,0,0.85); }
+  .btn-brand-split { color: var(--orange); border: 1px solid rgba(255,194,40,0.5); }
+  .btn-brand-split:hover { border-color: var(--orange); background: rgba(0,0,0,0.85); }
+  .split-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+
+  /* ─── LINK TREES ─── */
+  .tree-screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; min-height: calc(100vh - 60px); padding: 3rem 1.5rem 4rem; }
+  .tree-screen.active { display: flex; }
+  .tree-inner { width: 100%; max-width: 460px; }
+  .back-btn { background: none; border: none; color: rgba(249,248,245,0.5); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 2.5rem; padding: 0; transition: color 0.2s; letter-spacing: 0.06em; text-transform: uppercase; }
+  .back-btn:hover { color: rgba(249,248,245,0.9); }
+  .tree-avatar { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; }
+  .viewer-avatar { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: #fff; }
+  .brand-avatar { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,194,40,0.4); color: var(--orange); }
+  .tree-name { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 0.3rem; }
+  .tree-subtitle { font-size: 0.85rem; color: rgba(249,248,245,0.5); text-align: center; margin-bottom: 2.5rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .link-list { display: flex; flex-direction: column; gap: 0.85rem; }
+  .link-card { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-radius: 16px; text-decoration: none; cursor: pointer; transition: transform 0.18s ease, background 0.18s ease; border: 1px solid rgba(255,255,255,0.12); background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); }
+  .link-card:hover { transform: translateY(-2px); background: rgba(0,0,0,0.6); border-color: rgba(255,255,255,0.25); }
+  .brand-card:hover { border-color: rgba(255,194,40,0.4); }
+  .link-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 17px; background: rgba(255,255,255,0.08); }
+  .brand-icon { background: rgba(255,194,40,0.1); }
+  .link-info { flex: 1; }
+  .link-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--light); }
+  .link-desc { font-size: 0.78rem; color: rgba(249,248,245,0.45); margin-top: 1px; }
+  .link-arrow { color: rgba(249,248,245,0.3); font-size: 0.9rem; }
+
+  /* ─── PORTFOLIO ─── */
+  .hero { padding: 5rem 2rem 3rem; text-align: center; }
+  .hero-label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(249,248,245,0.55); margin-bottom: 1rem; }
+  .hero-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.4rem, 5vw, 3.8rem); letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 1rem; }
+  .hero-title span { color: var(--orange); -webkit-text-fill-color: var(--orange); }
+  .hero-sub { font-size: 0.95rem; font-weight: 300; color: rgba(249,248,245,0.65); max-width: 380px; margin: 0 auto; line-height: 1.7; }
+
+  .grid-wrap { padding: 2rem 1.5rem 6rem; max-width: 1400px; margin: 0 auto; }
+  .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; align-items: start; }
+  @media (max-width: 600px) { .video-grid { grid-template-columns: 1fr; } }
+
+  .video-card { border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.12); transition: transform 0.22s ease, box-shadow 0.22s ease; background: rgba(0,0,0,0.35); backdrop-filter: blur(6px); }
+  .video-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.22); }
+  .video-card blockquote.instagram-media { margin: 0 !important; min-width: unset !important; max-width: 100% !important; width: 100% !important; border: none !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+
+  .placeholder-card { aspect-ratio: 9/16; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem; backdrop-filter: blur(6px); transition: border-color 0.2s, background 0.2s; }
+  .placeholder-card:hover { border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.45); }
+  .placeholder-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .placeholder-text { font-size: 0.72rem; color: rgba(249,248,245,0.3); letter-spacing: 0.08em; }
+</style>
+</head>
+<body>
+
+<div class="sunset-bg"></div>
+<div class="sunset-overlay"></div>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="nav-logo" onclick="showPage('landing'); showLandingHome()">Evan Friesen</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-landing" onclick="showPage('landing'); showLandingHome()">Links</button>
+    <button class="nav-tab" id="tab-portfolio" onclick="showPage('portfolio')">Portfolio</button>
+  </div>
+  <button class="nav-cta" onclick="showBrandTree()">Work With Me →</button>
+</nav>
+
+<div class="site-content">
+
+  <!-- ═══ LANDING ═══ -->
+  <div id="page-landing">
+
+    <div id="landing-home" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 60px); text-align:center; padding:2rem;">
+      <div class="wordmark">Evan Friesen</div>
+      <div class="tagline">Content Creator &amp; UGC Specialist</div>
+      <div class="prompt-label">Who are you?</div>
+      <div class="split-btns">
+        <button class="split-btn btn-viewer" onclick="showLandingTree('viewer')">I'm a Viewer</button>
+        <button class="split-btn btn-brand-split" onclick="showLandingTree('brand')">I'm a Brand</button>
+      </div>
+    </div>
+
+    <!-- Viewer Tree -->
+    <div id="landing-viewer" class="tree-screen">
+      <div class="tree-inner">
+        <button class="back-btn" onclick="showLandingHome()">← Back</button>
+        <div class="tree-avatar viewer-avatar">EF</div>
+        <div class="tree-name">Evan Friesen</div>
+        <div class="tree-subtitle">Follow Along</div>
+        <div class="link-list">
+          <a class="link-card viewer-card" href="YOUR_INSTAGRAM_URL" target="_blank">
+            <div class="link-icon">📸</div>
+            <div class="link-info"><div class="link-title">Instagram</div><div class="link-desc">@yourhandle · Day-to-day content</div></div>
+            <div class="link-arrow">↗</div>
+          </a>
+          <a class="link-card viewer-card" href="YOUR_TIKTOK_URL" target="_blank">
+            <div class="link-icon">🎵</div>
+            <div class="link-info"><div class="link-title">TikTok</div><div class="link-desc">@yourhandle · Short form videos</div></div>
+            <div class="link-arrow">↗</div>
+          </a>
+          <a class="link-card viewer-card" href="YOUR_YOUTUBE_URL" target="_blank">
+            <div class="link-icon">▶</div>
+            <div class="link-info"><div class="link-title">YouTube</div><div class="link-desc">@yourhandle · Long form & vlogs</div></div>
+            <div class="link-arrow">↗</div>
+          </a>
+          <a class="link-card viewer-card" href="YOUR_NEWSLETTER_URL" target="_blank">
+            <div class="link-icon">✉</div>
+            <div class="link-info"><div class="link-title">Newsletter</div><div class="link-desc">Subscribe for exclusives</div></div>
+            <div class="link-arrow">↗</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand Tree -->
+    <div id="landing-brand" class="tree-screen">
+      <div class="tree-inner">
+        <button class="back-btn" onclick="showLandingHome()">← Back</button>
+        <div class="tree-avatar brand-avatar">EF</div>
+        <div class="tree-name">Evan Friesen</div>
+        <div class="tree-subtitle">Let's Work Together</div>
+        <div class="link-list">
+          <a class="link-card brand-card" href="YOUR_MEDIA_KIT_URL" target="_blank">
+            <div class="link-icon brand-icon">📋</div>
+            <div class="link-info"><div class="link-title">Media Kit</div><div class="link-desc">Stats, rates & past brand work</div></div>
+            <div class="link-arrow">↗</div>
+          </a>
+          <a class="link-card brand-card" href="YOUR_BOOKING_URL" target="_blank">
+            <div class="link-icon brand-icon">📅</div>
+            <div class="link-info"><div class="link-title">Book a Collaboration</div><div class="link-desc">Schedule a discovery call</div></div>
+            <div class="link-arrow">↗</div>
+          </a>
+          <a class="link-card brand-card" href="mailto:hello@yourdomain.com">
+            <div class="link-icon brand-icon">✉</div>
+            <div class="link-info"><div class="link-title">Email Me Directly</div><div class="link-desc">hello@yourdomain.com</div></div>
+            <div class="link-arrow">↗</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ PORTFOLIO ═══ -->
+  <div id="page-portfolio">
+    <div class="hero">
+      <div class="hero-label">UGC Portfolio</div>
+      <h1 class="hero-title">Content that<br><span>converts.</span></h1>
+      <p class="hero-sub">Scroll-stopping vertical content created for brands across every niche.</p>
+    </div>
+    <div class="grid-wrap">
+      <div class="video-grid">
+
+        <!-- ── LIVE VIDEOS ── -->
+        <div class="video-card">
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DXP_sTigaI8/" data-instgrm-version="14"></blockquote>
+        </div>
+        <div class="video-card">
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DWXF8hnEhHX/" data-instgrm-version="14"></blockquote>
+        </div>
+        <div class="video-card">
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DT_M_fckmDt/" data-instgrm-version="14"></blockquote>
+        </div>
+        <div class="video-card">
+          <!-- Guru Voice -->
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DXhFnz7ytIk/" data-instgrm-version="14"></blockquote>
+        </div>
+        <div class="video-card">
+          <!-- AI Bartender -->
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DTMlL-pETAs/" data-instgrm-version="14"></blockquote>
+        </div>
+        <div class="video-card">
+          <!-- People Watching Without Audio -->
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DXb78RDSUv4/" data-instgrm-version="14"></blockquote>
+        </div>
+
+        <!-- ── PLACEHOLDERS (replace with real Instagram URLs) ── -->
+        <div class="placeholder-card"><div class="placeholder-icon">▶</div><div class="placeholder-text">Video 7</div></div>
+        <div class="placeholder-card"><div class="placeholder-icon">▶</div><div class="placeholder-text">Video 8</div></div>
+        <div class="placeholder-card"><div class="placeholder-icon">▶</div><div class="placeholder-text">Video 9</div></div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script async src="//www.instagram.com/embed.js"></script>
+<script>
+  function showPage(page) {
+    document.getElementById('page-landing').style.display = 'none';
+    document.getElementById('page-portfolio').style.display = 'none';
+    document.getElementById('tab-landing').classList.remove('active');
+    document.getElementById('tab-portfolio').classList.remove('active');
+    if (page === 'landing') {
+      document.getElementById('page-landing').style.display = 'block';
+      document.getElementById('tab-landing').classList.add('active');
+    } else {
+      document.getElementById('page-portfolio').style.display = 'block';
+      document.getElementById('tab-portfolio').classList.add('active');
+      if (window.instgrm) window.instgrm.Embeds.process();
+    }
+    window.scrollTo(0, 0);
+  }
+  function showLandingHome() {
+    document.getElementById('landing-home').style.display = 'flex';
+    document.getElementById('landing-viewer').classList.remove('active');
+    document.getElementById('landing-brand').classList.remove('active');
+  }
+  function showLandingTree(type) {
+    document.getElementById('landing-home').style.display = 'none';
+    document.getElementById('landing-viewer').classList.remove('active');
+    document.getElementById('landing-brand').classList.remove('active');
+    document.getElementById('landing-' + type).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  function showBrandTree() {
+    showPage('landing');
+    showLandingTree('brand');
+  }
+
+  // Init — start on landing page
+  document.getElementById('page-landing').style.display = 'block';
+  document.getElementById('page-portfolio').style.display = 'none';
+</script>
+
+</body>
+</html>
